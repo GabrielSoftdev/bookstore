@@ -11,13 +11,13 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author User
  */
-public class MissingParamError {
+public class InvalidParamError {
 
-    private MissingParamError() {
+    private InvalidParamError() {
         //
     }
 
     public static void sendToClient(HttpServletResponse response, String parameter) throws IOException {
-        response.sendError(400, String.format("\"%s\" parameter is missing", parameter.toUpperCase()));
+        response.sendError(400, String.format("the \"%s\" parameter provided is invalid", parameter.toUpperCase()));
     }
 }

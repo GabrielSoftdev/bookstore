@@ -4,13 +4,14 @@
  */
 package com.gsoftdev.ecommerce.presentation.services;
 
+import com.gsoftdev.ecommerce.presentation.errors.InvalidParamError;
 import com.gsoftdev.ecommerce.presentation.errors.MissingParamError;
 import com.gsoftdev.ecommerce.presentation.protocols.Controller;
+import com.gsoftdev.ecommerce.presentation.protocols.Validator;
 import java.io.IOException;
 import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -25,14 +26,21 @@ import javax.servlet.http.HttpServletResponse;
 )
 public class SignUpService extends Controller {
 
+    private final Validator emailValidator;
+
+    public SignUpService(Validator emailValidator) {
+        this.emailValidator = emailValidator;
+    }
+
     @Override
     public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        if (request.getMethod() == "GET") {
+
+        if ("GET".equals(request.getMethod())) {
             doGet(request, response);
         }
-
-        if (request.getMethod() == "POST") {
+        
+        if ("POST".equals(request.getMethod())) {
 
             String[] requiredFields = {"name", "email", "password", "passwordConfirmation"};
             Map<String, String[]> parameterMapping = request.getParameterMap();
@@ -40,7 +48,15 @@ public class SignUpService extends Controller {
             for (String requiredField : requiredFields) {
                 if (!parameterMapping.containsKey(requiredField)) {
                     MissingParamError.sendToClient(response, requiredField);
+                    return; // to avoid IllegalStateException: Response already committed
                 }
+            }
+
+            String email = request.getParameter("email");
+            final boolean isValidEmail = emailValidator.isValid(email);
+            if (! !isValidEmail) {
+                InvalidParamError.sendToClient(response, "email");
+                return; // to avoid IllegalStateException: Response already committed
             }
 
             doPost(request, response);
