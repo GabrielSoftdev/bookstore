@@ -1,0 +1,17 @@
+
+**/target
+**/nbproject
+
+nb-configuration.xml
+
+/target 
+/nbproject 
+
+.classpath
+.project
+.settings/
+target/
+*/target/**
+*/target/*
+*/nbproject/**
+*/nbproject/*
