@@ -32,9 +32,9 @@ public class SignUpServletTest {
         servlet.service(postRequest, response);
 
         Assert.assertEquals("Should send 400 status code to client.", 400, response.getStatus());
-        Assert.assertEquals("Should send error message \"no name provided\" to client.", "no name provided", response.getErrorMessage());
+        Assert.assertEquals("Should send error message \"no name provided\" to client.", "\"NAME\" parameter is missing", response.getErrorMessage());
     }
-    
+
     @Test
     public void shouldReturn400IfNoEmailIsProvided() throws ServletException, IOException {
         HttpServlet servlet = new SignUpServlet();
@@ -49,6 +49,6 @@ public class SignUpServletTest {
         servlet.service(postRequest, response);
 
         Assert.assertEquals("Should send 400 status code to client.", 400, response.getStatus());
-        Assert.assertEquals("Should send error message \"no email provided\" to client.", "no email provided", response.getErrorMessage());
+        Assert.assertEquals("Should send error message \"no email provided\" to client.", "\"EMAIL\" parameter is missing", response.getErrorMessage());
     }
 }

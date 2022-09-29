@@ -4,6 +4,7 @@
  */
 package com.gsoftdev.ecommerce.presentation.services;
 
+import com.gsoftdev.ecommerce.presentation.errors.MissingParamError;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
@@ -34,11 +35,11 @@ public class SignUpServlet extends HttpServlet {
         Map<String, String[]> parameterMapping = req.getParameterMap();
 
         if (!parameterMapping.containsKey("name")) {
-            resp.sendError(400, "no name provided");
+            MissingParamError.sendToClient(resp, "name");
         }
 
         if (!parameterMapping.containsKey("email")) {
-            resp.sendError(400, "no email provided");
+            MissingParamError.sendToClient(resp, "email");
         }
 
         String name = req.getParameter("name");
