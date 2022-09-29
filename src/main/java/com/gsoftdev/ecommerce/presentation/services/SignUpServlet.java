@@ -31,7 +31,22 @@ public class SignUpServlet extends HttpServlet {
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if (req.getMethod() == "GET") {
+            doGet(req, resp);
+        }
 
+        if (req.getMethod() == "POST") {
+            doPost(req, resp);
+        }
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.sendRedirect("/SignUp");
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Map<String, String[]> parameterMapping = req.getParameterMap();
 
         if (!parameterMapping.containsKey("name")) {
@@ -44,39 +59,6 @@ public class SignUpServlet extends HttpServlet {
 
         String name = req.getParameter("name");
         String email = req.getParameter("email");
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setHeader("Content-Type", "text/plain");
-        PrintWriter writer = response.getWriter();
-        Enumeration e = request.getParameterNames();
-        while (e.hasMoreElements()) {
-            String parameter = String.valueOf(e.nextElement());
-            String[] values = request.getParameterValues(parameter);
-            for (int i = 0; i < values.length; i++) {
-                writer.write(parameter + "=" + values[i]);
-                writer.write("\n");
-            }
-        }
-        writer.close();
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/plain");
-        writeSelectMessage(req.getParameter("color"), resp.getWriter());
-        setColor(req, req.getParameter("color"));
-    }
-
-    void writeSelectMessage(String color, PrintWriter pw) throws IOException {
-        pw.print("You selected " + color);
-        pw.close();
-    }
-
-    void setColor(HttpServletRequest req, String color) throws ServletException {
-        req.getSession().setAttribute("color", color);
     }
 
 }
