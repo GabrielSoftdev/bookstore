@@ -11,6 +11,7 @@ import java.util.Enumeration;
 import java.util.Map;
 import javax.el.MethodInfo;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,23 +21,29 @@ import javax.ws.rs.core.Response;
  *
  * @author User
  */
+@WebServlet(
+        name = "SignUpServlet",
+        description = "Client sign up service",
+        urlPatterns = {"/SignUp"}
+)
 public class SignUpServlet extends HttpServlet {
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        
+
         Map<String, String[]> parameterMapping = req.getParameterMap();
-        
-        if(parameterMapping.containsKey("name")) {
-            String name = req.getParameter("name");
+
+        if (!parameterMapping.containsKey("name")) {
+            resp.sendError(400, "no name provided");
         }
-        
-        resp.sendError(400, "no name provided");
-        
-//        resp.sendRedirect("/invalidAccount");
+
+        if (!parameterMapping.containsKey("email")) {
+            resp.sendError(400, "no email provided");
+        }
+
+        String name = req.getParameter("name");
+        String email = req.getParameter("email");
     }
-    
-    
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

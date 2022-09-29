@@ -8,7 +8,6 @@ import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -19,38 +18,37 @@ import org.springframework.mock.web.MockHttpServletResponse;
  */
 public class SignUpServletTest {
 
-    private static String servletName ;
-    private static String servletUrl ;
-    private static HttpServlet servlet;
-
-    ;
-
-    @BeforeClass
-    public static void setUpBerforeClass() {
-        servletName = servlet.getServletName();
-        servletUrl = "http://localhost/" + servletName;
-        servlet = new SignUpServlet();
-    }
-
     @Test
     public void shouldReturn400IfNoNameIsProvided() throws ServletException, IOException {
         HttpServlet servlet = new SignUpServlet();
-        MockHttpServletRequest request = new MockHttpServletRequest("POST", "/" + servletName);
-        request.setParameter("name", "any_name");
-        request.setParameter("email", "any_email@mail.com");
-        request.setParameter("password", "any_password");
-        request.setParameter("passwordConfirmation", "any_password");
+
+        MockHttpServletRequest postRequest = new MockHttpServletRequest("POST", "/" + SignUpServlet.class);
+
+        postRequest.setParameter("email", "any_email@mail.com");
+        postRequest.setParameter("password", "any_password");
+        postRequest.setParameter("passwordConfirmation", "any_password");
 
         MockHttpServletResponse response = new MockHttpServletResponse();
-        servlet.service(request, response);
+        servlet.service(postRequest, response);
 
-        Assert.assertEquals(
-                "Should send error message \"No Name provided\" to client.",
-                "no name provided",
-                response.getErrorMessage());
-        Assert.assertEquals(
-                "Should send 400 status code to client.",
-                400,
-                response.getStatus());
+        Assert.assertEquals("Should send 400 status code to client.", 400, response.getStatus());
+        Assert.assertEquals("Should send error message \"no name provided\" to client.", "no name provided", response.getErrorMessage());
+    }
+    
+    @Test
+    public void shouldReturn400IfNoEmailIsProvided() throws ServletException, IOException {
+        HttpServlet servlet = new SignUpServlet();
+
+        MockHttpServletRequest postRequest = new MockHttpServletRequest("POST", "/" + SignUpServlet.class);
+
+        postRequest.setParameter("name", "any_name");
+        postRequest.setParameter("password", "any_password");
+        postRequest.setParameter("passwordConfirmation", "any_password");
+
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        servlet.service(postRequest, response);
+
+        Assert.assertEquals("Should send 400 status code to client.", 400, response.getStatus());
+        Assert.assertEquals("Should send error message \"no email provided\" to client.", "no email provided", response.getErrorMessage());
     }
 }
