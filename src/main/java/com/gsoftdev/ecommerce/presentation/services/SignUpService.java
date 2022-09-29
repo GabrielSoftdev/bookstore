@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author User
  */
 @WebServlet(
-        name = "SignUpServlet",
+        name = "SignUpService",
         description = "Client sign up service",
         urlPatterns = {"/SignUp"}
 )
@@ -35,11 +35,10 @@ public class SignUpService extends Controller {
     @Override
     public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-
         if ("GET".equals(request.getMethod())) {
             doGet(request, response);
         }
-        
+
         if ("POST".equals(request.getMethod())) {
 
             String[] requiredFields = {"name", "email", "password", "passwordConfirmation"};
