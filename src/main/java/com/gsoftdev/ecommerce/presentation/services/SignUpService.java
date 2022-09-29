@@ -33,6 +33,16 @@ public class SignUpService extends Controller {
         }
 
         if (request.getMethod() == "POST") {
+
+            String[] requiredFields = {"name", "email", "password", "passwordConfirmation"};
+            Map<String, String[]> parameterMapping = request.getParameterMap();
+
+            for (String requiredField : requiredFields) {
+                if (!parameterMapping.containsKey(requiredField)) {
+                    MissingParamError.sendToClient(response, requiredField);
+                }
+            }
+
             doPost(request, response);
         }
     }
@@ -44,16 +54,6 @@ public class SignUpService extends Controller {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Map<String, String[]> parameterMapping = req.getParameterMap();
-
-        if (!parameterMapping.containsKey("name")) {
-            MissingParamError.sendToClient(resp, "name");
-        }
-
-        if (!parameterMapping.containsKey("email")) {
-            MissingParamError.sendToClient(resp, "email");
-        }
-
         String name = req.getParameter("name");
         String email = req.getParameter("email");
     }
